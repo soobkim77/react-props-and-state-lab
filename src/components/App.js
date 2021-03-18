@@ -24,7 +24,10 @@ class App extends React.Component {
 
   handleFindPetsClicked = () => {
   
-  let url = `/api/pets?type=${this.state.filters.type}`
+  let url = `/api/pets`
+  if(this.state.filters.type !== 'all'){
+    url += `?type=${this.state.filters.type}`
+  }
 
     fetch(url)
     .then(r => r.json())
@@ -33,14 +36,12 @@ class App extends React.Component {
     })
   }
 
-  handleAdoptPet = (event) => {
-    let par = event.target.parentElement
-    let btn = par.querySelectorAll("button")
-    console.log(btn)
-    btn[0].className = "ui primary button"
-    btn[1].className = "ui disabled button"
-      // this.state.pets.find(pet => pet.id == id)
-  }
+  handleAdoptPet = petId => {
+    const pets = this.state.pets.map(pet => {
+      return pet.id === petId ? { ...pet, isAdopted: true } : pet;
+    });
+    this.setState({ pets: pets });
+  };
 
   render() {
     return (
